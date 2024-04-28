@@ -1,3 +1,9 @@
+// npm install ansi-colors
+//   console.log(c.green(name) + " 님 안녕하세요");
+// npm uninstall ansi-colors
+
+const c = require("ansi-colors");
+
 function hello(name) {
   console.log(name + " 님 안녕하세요");
 }
