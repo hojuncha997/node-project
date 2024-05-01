@@ -1,0 +1,64 @@
+1. 모듈:
+    기능별로 만들어 놓은 함수를 모듈이라고 한다. 모듈은 파일 형태로 저장하고 필요할 때마다 가져와서 사용한다.
+
+2. CommonJS 모듈 시스템과 ES모듈시스템:
+    노드는 모듈 기반으로 동작하지만 출시될 당시에는 ECMA스크립트에 모듈을 내보내고 가져오는 표준 명세가 정해져 있지 않았음
+    따라서 노드에서는 "require"를 사용해 왔는데 이것을 CommonJs 모듈이라고 한다.
+
+    후에 ECMA스크립트가 발전하면서 모듈을 처리하는 표준이 정해졌다. 노드에서는 이 방식을 ES모듈 시스템이라고 한다.
+    13.2.0버전 이후부턴느 ES모듈을 지원하고 있다. 그러나 여전히 require 함수도 사용할 수 있다.
+
+    한 프로젝트에서는 하나의 모듈 시스템으로 통일하여 사용하는 게 좋다.
+
+
+3. 모듈 내보내기:
+
+    모듈은 파일로 저장하므로 다른 파일에서 그 모듈을 사용할 수 있도록 외부에 노출해야 한다.
+        기본형 ==> module.exports = 외부로 내보낼 함수 또는 변수
+
+        exports.hello = (name) => {} //이처럼 함수 앞에 붙여서 직접 내보낼 수도 있다.
+
+4. 모듈 가져오기:
+
+    CommonJS 모듈 시스템에서 모듈을 가져올 때는 require 함수를 사용한다.
+    require() 괄호 안에 모듈 파일의 경로를 지정하면 된다. 이렇게 가져와 사용하는 것을 import라고 한다.
+
+    const user = require("./user");
+    const hello = require("./hello");
+
+    hello(user);
+
+    // 홍길동 님 안녕하세요
+
+
+5. 둘 이상의 변수 내보내기 및 가져오기:
+
+    const user1 = "Kim";
+    const user2 = "Lee";
+    const user3 = "Choi";
+
+    module.exports = { user1, user2 };
+
+    ---
+
+    const { user1, user2 } = require("./users-1");
+    const hello = require("./hello");
+
+    hello(user1);
+    hello(user2);
+
+    // Kim 님 안녕하세요
+    // Lee 님 안녕하세요
+
+
+6. 객체 형태로 받기:
+
+    const users = require("./users-3");
+    const hello = require("./hello");
+
+    console.log(users);
+    hello(users.user3);
+    
+    // { user1: 'Kim', user2: 'Lee', user3: 'Choi' }
+    // Choi 님 안녕하세요
+
