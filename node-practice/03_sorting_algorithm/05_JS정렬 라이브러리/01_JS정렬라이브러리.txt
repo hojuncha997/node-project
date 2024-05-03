@@ -147,4 +147,28 @@
 
         // ['Apple', 'Banana', 'carrot', 'durian', 'pineapple']
 
-    -8. 
+    
+
+    ////////////////////////////////////
+
+
+    -8. 객체에 대해여 원하는 기준으로 오름차순 정렬 예시
+
+        성적 점수가 높은 순으로 학생 데이터를 나열하는 예시
+
+        let arr = [
+            {name: "홍길동", score: 90},
+            {name: "김철수", score: 85},
+            {name: "박영희", score: 97},
+        ];
+
+        function compare(a, b) {
+            //  해당 객체의 프로퍼티의 value끼리 비교: 여기서는 score값이 더 큰 객체가 앞으로 오도록
+            return b.score - a.score;
+        }
+
+        arr.sort(compare);
+
+        console.log(arr);
+
+        //  실제로는 정렬할 원소가 객체인 경우가 많기 때문에 익숙해질 필요가 있음.
