@@ -1,0 +1,95 @@
+1. 노드에서 ES모듈 시스템을 사용하는 방법은 두 가지이다.
+    - 방법 1. package.json에 모듈 추가하기:
+        애플리케이션 전체에서 ES모듈 시스템을 사용한다면 그에 필요한 항목을 package.json파일에 추가하면 된다.
+        package.json은 노드 애플리케이션을 만들 때 필요한 환경을 저장해 놓은 파일이다.
+        단, package.json에서 ES모듈시스템을 사용하겠다고 설정하면 그 뒤로는 CommonJS모듈 시스템을 사용할 수 없다.
+        오류가 발생한다.
+
+        "type":"module", 을 추가한다.
+
+
+    - 방법 2. 파일 확장자를 .mjs로 지정하기:
+        ES모듈 시스템을 사용하는 파일의 확장자를 .mjs로 설정한다.
+
+
+2. ES모듈시스템에서 모듈 내보내기 - export, export default
+    : ES모듈시스템에서 모듈을 내보낼 때는 export 예약어를 사용한다.
+    이 때 변수나 함수 앞에 export를 붙일 수도 있고 모듈 끝에 export를 사용해서 내보낼 수도 있다.
+
+    - 방법 1. 하나씩 내보내기 - export 붙이기
+        모듈에 있는 함수, 변수, 객체를 외부에서 사용할 수 있도록 앞에 export를 붙여준다.
+
+        export const goodbye = (name) => {
+            console.log(`${name} 님, 안녕히가세요.`);
+        }
+
+    - 방법 2. 기본으로 내보내기 - export default
+        모듈에서 내보낼 대상이 하나뿐이라면 모듈 코드 마지막에서 export default를 사용할 수도 있다.
+
+        const goodbye = (name) => {
+            console.log(`${name} 님, 안녕히가세요.`);
+        }
+        export default goodbye;
+
+    - 방법 3. 여러 개 내보내기:
+        모듈을 여러 개를 내보낼 때는 객체로 묶어야 한다. 이 때는 default를 붙이지 않는다.
+
+        const hi = (name) => {
+            console.log(`${name} 님, 안녕히가세요.`);
+        };
+        const goodbye = (name) => {
+            console.log(`${name} 님, 안녕히가세요.`);
+        };
+
+        export { hi, goodbye };
+
+    
+3. ES모듈 시스템에서 모듈 가져오기 - import ~ from
+    : .mjs를 사용하는 경우 팡리 확장자까지 적어야 한다.
+
+    import {hi, goodbye} from "./goodbye-1.mjs";
+    goodbye("홍길동");
+    hi("홍길동");
+
+    //$node ./goodbye-1.mjs
+
+    // alias를 사용하고 싶을 때
+
+    import {hi as hello, goodbye as bye} from "./goodbye-1.mjs";
+    hello("홍길동");
+
+    // 모듈이 함수를 전부 가져오려면
+    import * as say from "./goodbye-1.mjs";
+
+    say.hi("홍길동")
+    say.bye("홍길동")
+
+
+
+4.모듈에서 함수나 변수를 묶어서 내보낼 때 default를 붙였다면
+    이것은 객체 1개를 내본내 것으로 간주해서 * as 없이 객체 이름으로 가져올 수 있다.
+
+    export default {hi, goodbye};
+
+    ...
+
+    import say from "./greeting-2.mjs"
+    say.hi("홍길동");
+    say.bye("홍길동");
+
+
+5. 구조분해 할당
+
+    배열이나 객체에 들어있는 여러 값을 한 번에 분해해서 변수로 할다 가능
+
+    //배열의 경우
+    const fruits = ["사과", "복숭아"]
+    let [apple, peach] = fruits;
+
+    //객체의 경우
+    const member = {
+        name: 'Kim',
+        age: 25
+    }
+
+    let {name, age} = member;
