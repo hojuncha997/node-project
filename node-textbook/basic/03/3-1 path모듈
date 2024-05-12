@@ -1,0 +1,93 @@
+1. path 모듈:
+    파일이나 디렉터리 경로를 다룰 수 있는 함수들이 포함돼 있음.
+    path모듈, 즉 경로를 다루는 모듈이 필요한 큰 이유는 운영체제 간에 경로를 구분하는 구분자가 다르기 때문이다.
+
+    - 경로 구분자 통일
+        윈도우  운영체제는 \ 를 경로 구분자로 사용한다.
+        유닉스 기반 운영체제에서는 / 를 사용한다.
+        운영체제마다 파일을 지정할 때 사용하는 구분자가 다르므로 잘못 쓰면 파일을 찾을 수 없다.
+        path모듈을 사용해서 경로를 지정하면 구분자를 신경쓰지 않아도 된다.
+
+    - 구분자 분할/통합
+        path모듈에는 경로 정보를 활용할 수 있는 여러 함수가 포함돼 있다. 폴더 이름과 피일 이름을 지정해서 새로운 경로를 만들 수도 있ㄷ고,
+        가져온 경로 정보를 분해해서 필요한 정보만 꺼내 쓸 수도 있다.
+
+
+
+2. 절대 경로와 상대 경로
+    - 절대 경로: 파일이나 폴더의 위치를 루트 폴더부터 시작해서 파일까지 전부 타나내는 방법
+    - 상대 경로: 기준이 되는 파일이 있을 때 사용하는 경로
+
+
+3. 경로를 다루는 주요 함수
+
+    3.1. path모듈 가져오기
+        path모듈은 노드에 포함돼 있으므로 따로 설치하지 않고 가져올 수 있다.
+
+        require("path");
+
+        애플리케이션을 제작할 때는 하위폴더를 여러 개 만들고 그 안에 있는 파일을 가져오거나 하위 폴더에 파일을 저장한다.
+        이 때 join함수를 사용하면 여러 조각으로 나눠 입력한 경로를 연결해 하나로 만든다.
+
+        path.join(경로1, 경로2, ...)
+
+        const path = require("path");
+        const fullPath = path.join('some', 'work', 'ex.txt');
+        console.log(fullPath)   
+        
+        // some\work\ex.txt
+
+    3.2. 경로만 추출하기: dirname 함수
+        dirname 함수는 경로에서 파일 이름을 제외한 경로만 추출한다.
+
+        path.dirname(경로)
+
+        예시)
+            const path = require("path");
+
+            // 절대 경로
+            console.log(`파일 절대경로: ${__filename}`);
+
+            const dir = path.dirname(__filename);
+            console.log(`경로만: ${dir}`);
+
+            // 파일 절대경로: D:\personal\react-workspace\node-project\node-textbook\basic\03\path.js
+            // 경로만: D:\personal\react-workspace\node-project\node-textbook\basic\03
+
+    3.3. 파일 이름 추출하기: basename함수
+        basename 함수는 경로에서 파일 이름만 추출한다. 파일 확장자를 제외한 이름만 추출하려면 basename함수에서 확장자를 지정하면 된다.
+
+        path.basename(경로)
+        path.basename(경로, 확장자)
+
+
+
+    3.4. 확장자 추출하기: extname 함수
+
+        만약 파일의 확장자를 모른다면 extname함수를 사용해서 주어진 경로에서 파일의 확장자만 추출할 수 있다.
+        path.extname(경로)
+
+            const ext = path.extname(__filename); // 확장자 추출
+            console.log(`파일 확장자 : ${ext}`); //  .js
+            console.log(path.basename(__filename, ext)); // .js를 제외하고 파일명만 추출
+
+            // 파일 확장자 : .js
+            // path
+
+
+    3.5. 경로를 객체로 반환하기: parse 함수
+
+        parse 함수는 경로를 분해해서 정보를 각각 객체로 반환한다.
+        반환된 객체에는 루트 폴더를 비롯해서 파일 경로, 파일 이름, 확장자, 확장자를 제외한 파일 이름 등이 포함된다.
+
+       path.parse(경로)
+
+           const parsePath = path.parse(__filename);
+           console.log(parsePath);
+           // {
+           //     root: 'D:\\',
+           //     dir: 'D:\\personal\\react-workspace\\node-project\\node-textbook\\basic\\03',
+           //     base: 'path.js',
+           //     ext: '.js',
+           //     name: 'path'
+           //  }
