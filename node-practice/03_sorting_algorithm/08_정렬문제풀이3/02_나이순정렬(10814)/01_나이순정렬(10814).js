@@ -16,9 +16,49 @@
 21 Dohyun
 20 Sunyoung
 
+==> 
+
 20 Sunyoung
 21 Junkyu
 21 Dohyun
 
 
 */
+
+const fs = require("fs");
+const input = fs
+  .readFileSync("./files/input.txt", "utf-8")
+  .toString()
+  .split("\n");
+
+// console.log(input);
+
+const n = Number(input[0]);
+
+let arr = [];
+
+for (let i = 1; i <= n; i += 1) {
+  const [a, b] = input[i].split(" ");
+  arr.push({ seq: i - 1, age: Number(a), name: b });
+}
+
+// console.log(arr);
+
+const compare = (a, b) => {
+  if (a !== b) {
+    return a.age - b.age;
+  } else {
+    return a.seq - b.seq;
+  }
+};
+
+arr.sort(compare);
+// console.log(arr);
+
+let result = "";
+
+arr.forEach((item) => {
+  result += `${item.age} ${item.name}\n`;
+});
+
+console.log(result);
