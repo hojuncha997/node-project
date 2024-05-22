@@ -25,40 +25,63 @@
 
 */
 
-const fs = require("fs");
-const input = fs
+// const fs = require("fs");
+// const input = fs
+//   .readFileSync("./files/input.txt", "utf-8")
+//   .toString()
+//   .split("\n");
+
+// // console.log(input);
+
+// const n = Number(input[0]);
+
+// let arr = [];
+
+// for (let i = 1; i <= n; i += 1) {
+//   const [a, b] = input[i].split(" ");
+//   arr.push({ seq: i - 1, age: Number(a), name: b });
+// }
+
+// // console.log(arr);
+
+// const compare = (a, b) => {
+//   if (a !== b) {
+//     return a.age - b.age;
+//   } else {
+//     return a.seq - b.seq;
+//   }
+// };
+
+// arr.sort(compare);
+// // console.log(arr);
+
+// let result = "";
+
+// arr.forEach((item) => {
+//   result += `${item.age} ${item.name}\n`;
+// });
+
+// console.log(result); 맞음
+
+////////////////////해설
+
+let fs = require("fs");
+let input = fs
   .readFileSync("./files/input.txt", "utf-8")
   .toString()
   .split("\n");
 
-// console.log(input);
-
-const n = Number(input[0]);
-
+let n = Number(input[0]);
 let arr = [];
 
-for (let i = 1; i <= n; i += 1) {
-  const [a, b] = input[i].split(" ");
-  arr.push({ seq: i - 1, age: Number(a), name: b });
+for (let i = 1; i <= n; i++) {
+  let age = Number(input[i].split(" ")[0]);
+  let name = input[i].split(" ")[1];
+  arr.push([age, name]);
 }
 
-// console.log(arr);
+arr.sort((a, b) => a[0] - b[0]); // Node.js의 정렬은 기본적으로 stable
 
-const compare = (a, b) => {
-  if (a !== b) {
-    return a.age - b.age;
-  } else {
-    return a.seq - b.seq;
-  }
-};
-
-arr.sort(compare);
-// console.log(arr);
-
-let result = "";
-
-arr.forEach((item) => {
-  result += `${item.age} ${item.name}\n`;
-});
-
-console.log(result);
+let answer = "";
+for (let x of arr) answer += x[0] + " " + x[1] + "\n";
+console.log(answer);
