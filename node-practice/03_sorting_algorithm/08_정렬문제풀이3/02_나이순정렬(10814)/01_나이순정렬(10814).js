@@ -80,7 +80,7 @@ for (let i = 1; i <= n; i++) {
   arr.push([age, name]);
 }
 
-arr.sort((a, b) => a[0] - b[0]); // Node.js의 정렬은 기본적으로 stable
+arr.sort((a, b) => a[0] - b[0]); // Node.js의 정렬은 기본적으로 stable sort (안정정렬). 즉, 기존 순서대로 정렬함
 
 let answer = "";
 for (let x of arr) answer += x[0] + " " + x[1] + "\n";
