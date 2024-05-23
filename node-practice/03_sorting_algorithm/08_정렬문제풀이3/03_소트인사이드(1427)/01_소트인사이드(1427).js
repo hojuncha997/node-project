@@ -23,34 +23,41 @@
 500613009
 ==> 
 965310000
+
+
+총 10개의 숫자가 존재
+0부터 9까지 모든 숫자에 대하여 빈도수를 센다.
+각 숫자를 내림차순으로 하나씩 확인하며 [빈도수만큼] 출력한다.
+
+
 */
 
-let fs = require("fs");
-let input = fs
-  .readFileSync("./files/input.txt", "utf-8")
-  .toString()
-  .split("")
-  .map(Number);
+// let fs = require("fs");
+// let input = fs
+//   .readFileSync("./files/input.txt", "utf-8")
+//   .toString()
+//   .split("")
+//   .map(Number);
 
-// console.log(input);
+// // console.log(input);
 
-const compare = (a, b) => {
-  if (a !== b) {
-    return b - a;
-  }
-};
+// const compare = (a, b) => {
+//   if (a !== b) {
+//     return b - a;
+//   }
+// };
 
-input.sort(compare);
+// input.sort(compare);
 
-// console.log(input);
+// // console.log(input);
 
-let answer = "";
+// let answer = "";
 
-input.forEach((item) => {
-  answer += item.toString();
-});
+// input.forEach((item) => {
+//   answer += item.toString();
+// });
 
-console.log(answer);
+// console.log(answer);
 
 // //////////////// ide에서는 맞았지만 백준에서는 틀렸음
 
@@ -66,5 +73,38 @@ let sortedInput = input.split("").sort((a, b) => b - a).join("");
 
 console.log(sortedInput);
 
+백준에서는 통과
+
 
 */
+
+/* 
+
+
+
+
+
+
+
+
+*/
+
+let fs = require("fs");
+let input = fs.readFileSync("./files/input.txt", "utf-8").split("n");
+
+let n = input[0]; //  수 입력받기
+let cnt = Array(10).fill(0); // 초기 빈도 값은 0으로 초기화
+
+for (let x of n) {
+  // 한 자리씩 숫자(digit)를 확인하며
+  cnt[Number(x)]++;
+}
+
+let answer = "";
+for (let i = 9; i >= 0; i--) {
+  for (let j = 0; j < cnt[i]; j++) {
+    return (answer += i + "");
+  }
+}
+
+console.log(answer);
