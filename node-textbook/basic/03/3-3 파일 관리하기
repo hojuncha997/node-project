@@ -1,0 +1,179 @@
+1. 파일읽기 - readFileSync, readFile
+    : fs모듈을 통해 파일을 읽을 때는 readFileSync 또는 readFile 함수를 사용한다.
+
+    1.1. readFileSync / 
+        : 동기 처리로 파일을 읽을 때사용하는 함수. 파일 내용을 버퍼 또는 문자열 형태로 반환한다.
+        버퍼는 자료를 잠시 저장해 두는 임시 메모리 영역이다. 자료를 읽어오거나 다른 곳으로 이동할 때 임시 저장공간으로 사용한다.
+
+        1.1.1.
+        fs.readFileSync(경로[, 옵션])
+
+            경로: 파일 이름이나 경로를 포함한 파일 지정
+            옵션: readFileSync함수에서는 encoding과 flag 옵션을 사용함.
+                - encoding: 반환값을 가져올 형태 지정. 기본값인 null을 사용하면 바이너리 형태로 반환하고,
+                            utf-8로 지정하면 사람이 읽을 수 있는 텍스트 형태로 가져옴.
+
+                - flag: 파일을 읽을 때 어떤 형태로 열지 지정함. 기본값이 r을 사용하면 읽기 모드로 연다.
+                            r+ : 읽기 & 쓰기
+                            w  : 쓰기
+                            a  : 추가
+
+        1.1.2.
+        fs.readFile(파일[, 옵션], 콜백)
+
+            파일: 파일이름이나 경로를 포함하여 파일 지정
+            옵션: encoding, flag, signal
+                signal: 파일 읽기에 시간이 너무 많이 걸릴 경우, signal옵션을 사용해 중간에 파일 읽기 취소 가능
+
+            콜백: readFile 함수에서 콜백을 처리할 때는 err와 data 매개변수 사용
+            read-3.js참조
+
+2. 파일에 기록하기: writeFileSync, writeFile
+    : fs모듈에서 파일에 내용을 기록할 때는 writeFileSync 또는 writeFile을 사용한다. flag옵션 사용에 따라 기존 파일에 내용추가도 가능하다.
+
+    2.1. fs.writeFileSync(파일, 내용[, 옵션]) //동기처리로 파일에 쓰기
+        파일: 내용을 기록할 파일 지정한다.
+        내용: 기록할 내용을 지정한다.
+        옵션: writeFileSync 함수에서 사용할 수 있는 옵션은 encoding과 flag, mode이다.
+
+        mode: 파일에 사용자의 권한을 설정한다. 8진수 형태의 숫자를 사용할 수도 있고, 알파벳과 문자로 된 문자열을 지정할 수도 있다.
+                기본값은 0o666이다. (읽고, 쓰기 권한)
+
+        write-1.js 참조
+
+
+    2.2. 파일 존재 여부 체크하기 existsSync 함수
+
+        text-1.txt 파일이 있는 상태에서 writeFileSync 함수를 사용해서 다시 text-1.txt에 기록하면 기존 text-1.txt 에 있던 내용이 사라진다.
+        따라서 파일 기록 함수를 사용할 때는 기록 대상 파일의 기존 존재 여부를 확인하는 것이 좋다.
+        existsSync 함수는, 파일이 있다면 true 없으면 false를 반환한다.
+
+        fs.exsistsSync(파일)
+
+        const fs = require("fs");
+
+        const data = fs.readFileSync("./example.txt", "utf-8");
+
+        if (fs.existsSync("./text-1.txt")) {
+        console.log("file already exists");
+        } else {
+        fs.writeFileSync("./text-1.txt", data);
+        }
+
+        // $ node write-2.js
+        // file already exists
+
+
+    2.3. 비동기 처리로 파일에 쓰기 - writeFile
+        비동기로 특정 파일에 내용을 기록할 때는 writeFile을 사용한다.
+
+        fs.writeFile(파일, 내용[, 옵션], 콜백)
+
+        파일: 내용을 기록할 파일을 지정한다.
+        내용: 기록할 내용을 지정한다.
+        옵션: writeFileSync 함수에서 사용할 수 있는 옵션은 encoding, mode, flag, signal이다.
+        - mode: 파일에 관한 권한
+        - flag: 기본값은 w이다. 기존 파일에 내용을 추가한다면 a를 사용한다.
+        - signal: 파일에 내용을 기록할 때 시간이 걸릴 경우 signal 옵션을 사용해서 중간에 파일 쓰기를 취소할 수 있다.
+
+        콜백: writeFile 함수에서 콜백을 사용할 때 err 매개변수를 사용한다.
+
+        write-3.js 참조
+
+    
+    2.4. 기존 파일에 추가하기: flag 옵션 사용하기
+
+    writeFileSync 또는 writeFile 함수에서 파일 이름을 지정할 때 이미 존재하는 경우에는 기존 내용을 삭제하고 새로운 내용을 추가한다.
+    만약 기존 내용을 유지하면서 새 내용을 추가해야 한다면 flag 옵션을 지정할 수 있다.
+
+        a   : 내용 추가 위해 파일을 연다. 파일이 없으면 만든다.
+        ax  : a와 같지만 파일이 존재하는 경우 실패
+        a+  : 파일을 읽고 내용을 추가히기 위해 파일을 연다. 파일이 없으면 만든다.
+        ax+ : ax와 같지만 파일이 있을 경우 실패한다.
+        as  : 동기 처리로 내용을 추가하기 이해 파일을 연다. 파일이 없으면 만든다.
+        w   : 쓰기 위해 파일을 연다.(기본 플래그)
+        wx  : w와 같지만 파일이 있을 경우 실패한다.
+        w+  : 내용을 읽고 쓰기 위해 파일을 연다. 파일이 없으면 만든다.
+        wx+ : wx와 같지만 파일이 있을 경우 실패한다.
+        ...
+
+        write-4.js 참조
+
+
+
+
+
+
+  3. 기존 파일에 내용 추가하기 - appendFileSync, appendFile
+
+    기존 파일에 내용을 추가할 때 flag 옵션을 사용하지 않고 appendFileSync, 또는 appendFile함수를 사용할 수 있다.
+
+    fs.appendFileSync(파일, 내용[, 옵션])
+    fs.appendFile(파일, 내용[, 옵션], 콜백)
+
+    파일: 내용을 기록할 파일 지정
+    내용: 기록할 내용 지정
+    옵션: encoding, mode, flag
+
+    flag: 기본값은 w, 기존 파일에 내용을 추가한다면 a 사용
+    콜백: err, data를 매개변수로 사용
+
+        const fs = require("fs");
+
+        fs.appendFile("./text-2.txt", "\n\n 새로운 내용 추가", (err) => {
+        if (err) {
+            console.log(err);
+        }
+        console.log("appending to file");
+        });
+
+        // $ node write-5.js
+        // appending to file
+
+        // Node.js is an open-source, cross-platform JavaScript runtime environment.
+        // Node.js는 Chrome V8 JavaScript 엔진으로 빌드된 JavaScript 런타임입니다.
+
+        //  새로운 내용 추가
+
+
+
+4. 파일 삭제하기 - unlinkSync, unlink 함수
+
+    파일을 삭제할 때는 unlinkSync(동기), unlink(비동기) 함수를 사용한다.
+    
+    fs.unlinkSync(파일)
+    fs.unlink(파일, 콜백)
+    
+    파일: 삭제할 파일을 지정한다.
+    콜백: unlink 함수에서 콜백을 처리할 때는 매개변수가 없다.
+
+
+    4.1. unlinkSync 동기 삭제
+    
+        unlink-1.js파일을 사용해서 text-1.txt파일 삭제
+
+        $ node unlink-1.js 
+        file deleted
+
+        만약 text-1.txt가 존재하지 않았더라도 오류는 발생하지 않는다.
+        따라서 existsSync 함수를 사용해 해당 파일이 존재하는지 체크하는 것이 좋다.
+
+        unlink-2.js 참조
+
+        const fs = require("fs");
+
+        if (!fs.existsSync("./text-1.txt")) {
+        console.log("file does not exist");
+        } else {
+        fs.unlinkSync("./text-1.txt");
+        console.log("file deleted");
+        }
+
+        // $ node unlink-2
+        // file does not exist
+
+    4.2. unlink : 비동기로 삭제
+
+        비동기 처리를 하므로 콜백을 함께 사용하는데, 콜백함수에 인자가 없다.
+        writeFile함수에서는 콜백함수에 (err,data) => {} 처럼 err, data라는 인자가 있었다.
+        그러나 unlink에서는 () => {} 이렇게만 사용한다.
