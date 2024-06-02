@@ -1,0 +1,110 @@
+1. 디렉터리 만들기
+
+    1.1. 디렉터리 만들기: mkdirSync, mkdir 함수
+        디렉터리를 만들 때도 동기와 비동기로 구분해서 사용할 수 있다.
+
+        fs.mkdirSync(경로[, 옵션])
+        fs.mkdir(경로[, 옵션], 콜백)
+
+        경로: 새로 만들 디렉토리 경로
+        옵션: recursive, mode
+            - recursive: 여러 계층의 디렉터리를 지정했을 때 중간에 존재하지 않는 경로까지 포함해서 디렉터리를 만들 수 있다. false가 기본값.
+            - mode: 디렉터리의 권한을 지정한다. 기본값은 0o777 (읽기/쓰기/실행)이다.
+        콜백: mkdir 함수에서 콜백 형태는 err 매개변수를 사용한다.
+
+            const fs = require("fs");
+            if (fs.existsSync("./text")) {
+            console.log("folder already exists");
+            } else {
+            fs.mkdir("./test", (err) => {
+                if (err) {
+                console.error(err);
+                }
+                console.log("foler created");
+            });
+            }
+            // $ node dir-1.js
+            // foler created
+            
+        1.2. 여러 계층의 디렉터리 만들기
+            : recursive 옵션을 사용하면 여러 개로 이루어진 하위 폴더를 쉽게 만들 수 있다.
+
+            const fs = require("fs");
+            if (fs.existsSync("./text2/test3/test4")) {
+            console.log("folder already exists");
+            } else {
+            fs.mkdir("./test2/test3/test4", { recursive: true }, (err) => {
+                if (err) {
+                console.log(err);
+                }
+                console.log("folder created");
+            });
+            }
+            // $ node dir-2.js
+            // folder created
+
+
+
+
+2. 디렉토리 삭제하기
+
+    2.1. 빈 디렉토리 삭제하기: rmdirSync, rmdir 함수
+        : 디렉토리를 삭제할 때는 동기 처리와 비동기 처리를 구분해서 rmdirSync함수나 rmdir 함수를 사용한다.
+
+        * 이 함수들은 디렉터리가 비어있어야 삭제가 가능하다.
+
+        fs.rmdirSync(경로, 내용[, 옵션])
+        fs.rmdir(경로[, 옵션], 콜백)
+
+        경로: 삭제할 디렉토리 경로를 지정한다.
+        옵션: maxRetries, retryDelay
+            - maxRetries: 오류 발생으로 디렉토리 삭제에 실패했을 때의 재시도 횟수(기본값은 0)
+            - retryDelay: maxRetries에서 재시도 횟수를 지정했을 경우 대기시간(밀리초) 지정(기본값은 100)
+        
+        콜백: rmdir함수에서 콜백형태는 err 매개변수를 사용한다.
+
+            const fs = require("fs");
+            if (fs.existsSync("./test")) {
+            fs.rmdir("./test", (err) => {
+                if (err) {
+                console.error(err);
+                } else {
+                console.log("folder deleted");
+                }
+            });
+            } else {
+            console.log("folder does not exist");
+            }
+            // $ node dir-3.js
+            // folder deleted
+
+
+    2.2. 파일 삭제 및 내용이 있는 디렉토리 삭제하기 - rmSync, rm
+
+        디렉토리에 내용이 있더라도 삭제하려면 rmSync 함수나 rm 함수를 사용한다.
+
+        fs.rmSync(경로, 내용[, 옵션])
+        fs.rm(경로[, 옵션], 콜백)
+
+        경로: 삭제할 디렉토리 경로나 파일을 지정
+        옵션: force, maxRetries, retryDelay, recursive
+            - force: true로 지정하면 파일이나 디렉토리를 강제로 삭제한다. 해당 디렉토리가 존재하지 않아도 오류는 발생하지 않는다. 기본값은 false
+            - recursive: 경로가 여러 단계라면 단계별로 삭제 작업을 실행한다. 기본값은 false
+
+        콜백: rm함수의 콜백에서는 err을 매개변수로 사용한다.
+
+
+        const fs = require("fs");
+        fs.rm("./test2", { recursive: true }, (err) => {
+        if (err) {
+            console.error(err);
+        } else {
+            console.log("folder deleted");
+        }
+        });
+
+        // $ node dir-4.js
+        // folder deleted
+
+
+
